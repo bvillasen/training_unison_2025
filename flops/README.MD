@@ -39,9 +39,9 @@ Run the benchmark
 Add `rocprof-compute` to your path
 
 ```bash 
-source /lustre/home/fnsc03/shared_cursoU/miniconda3/etc/profile.d/conda.sh
+source /lustre/cursos/curso02/miniconda3/etc/profile.d/conda.sh
+export /lustre/cursos/curso02/rocprof-compute/bin:$PATH
 conda activate rocprof-compute
-export PATH=/lustre/home/fnsc03/shared_cursoU/rocprof-compute/bin:$PATH
 ```
 
 Run rocprof-compute in profiling mode
