@@ -108,7 +108,115 @@ Check out the results
 ```bash
 cat rocprof_results/results_kernel_stats.csv
 ```
+You should see something like the following:
+
+```bash
+"Name","Calls","TotalDurationNs","AverageNs","Percentage","MinNs","MaxNs","StdDev"
+"JacobiIterationKernel",1000,2484971674,2484971.674000,44.82,2098237,88032708,4995449.197068
+"NormKernel1",1001,1853203384,1851352.031968,33.43,1591519,87335904,3514946.954781
+"LocalLaplacianKernel",1000,1185656942,1185656.942000,21.39,1048959,87003489,2862313.845168
+"HaloLaplacianKernel",1000,16566548,16566.548000,0.2988,15520,18240,406.756963
+"NormKernel2",1001,3932479,3928.550450,0.0709,3520,5280,271.779796
+"__amd_rocclr_fillBufferAligned",1,7200,7200.000000,1.299e-04,7200,7200,0.00000000e+00
+```
 
 
+## Profile the time line with Omnitrace
+
+```bash
+module load omnitrace
+```
+
+Generate a default configuration file
+```bash
+omnitrace-avail -G ~/.omnitrace.cfg
+```
+
+Edit your configuration file and set
+```bash
+vim ~/.omnitrace.cfg
+OMNITRACE_SAMPLING_CPUS = none
+OMNITRACE_SAMPLING_GPUS = 0
+```
+
+Set your omnitrace configuration file
+```bash
+export OMNITRACE_CONFIG_FILE=~/.omnitrace.cfg
+```
+
+Now we generate an instrumented binary
+
+```bash
+omnitrace-instrument -o ./Jacobi_hip.inst -- ./Jacobi_hip
+```
+
+Finally, we run the instrumented binary and use Omnitrace to trace our application
+
+```bash
+mpirun -np 1 omnitrace-run -- ./Jacobi_hip.inst -g 1 1 -m 8192 8192
+```
+
+The results are saved to the `omnitrace-Jacobi_hip.inst-output` directory.
+Copy the results to your computer
+
+bash
+```
+scp -r fnsc03@148.225.111.153:/lustre/home/fnsc03/training_unison_2025/jacobi/omnitrace-Jacobi_hip.inst-output .
+```
+
+Go to [https://ui.perfetto.dev](https://ui.perfetto.dev) and load the file with `.proto` extension
+
+## Using two GPUs
+
+If you want to use more than one GPU, we recommend you submit your job instead of using an interactive session. 
+
+To submit your job you need to write a SLURM script. Here an example  of the content.
+
+```bash
+#!/bin/bash
+#SBATCH -p gpu
+#SBATCH -J jacobi
+#SBATCH --time=0:01:00
+#SBATCH --nodes=1
+#SBATCH --ntasks-per-node=2
+#SBATCH --gpus-per-node=2
+#SBATCH --threads-per-core=1
+#SBATCH --cpus-per-task=1
+#SBATCH -o job_output.log
+#SBATCH -e job_error.log
+
+echo "Starting job. $(date)"
+
+module use --prepend /lustre/home/fnsc04/modules
+module load rocm
+module load openmpi/5.0.7-ucc1.3.0-ucx1.18.0
+module load omnitrace
+
+export OMNITRACE_CONFIG_FILE=~/omnitrace.cfg
+
+mpirun -np 2 omnitrace-run -- ./Jacobi_hip.inst  -g 2 1 -m 8192 8192
+
+echo "Finished job. $(date)"
+```
 
 
+Copy the content into a file, for example `submit_job.slurm`
+and then submit the Job to the SLURM queues by running:
+
+```bash
+sbatch submit_job.slurm
+```
+
+
+Now you wile see two output files:
+
+```bash
+ perfetto-trace-0.proto  perfetto-trace-1.proto
+```
+
+You can merged them into a single one by running:
+
+```bash
+cat perfetto-trace-*.proto > merged.proto
+```
+You can load the `merged.proto` file into [https://ui.perfetto.dev](https://ui.perfetto.dev) to see the two timelines together
