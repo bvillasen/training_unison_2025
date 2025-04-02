@@ -73,7 +73,17 @@ Run rocprof-compute in analysis mode
 rocprof-compute analyze -p workloads/flops/MI210
 ```
 
+## Change the arithmetic intensity 
 
-## Documentation
+The `N_ITER` parameter controls the amount of FLOPs done by the kernel, to increase the arithmetic intensity recompile with a different value for `N_ITER`
+
+```bash
+make clean
+make N_ITER=256
+```
+
+If you get the roofline measurement you will see hor the kernel data point moved to a higher arithmetic intensity
+
+## `rocprof-compute` Documentation
 
 More documentation can be found here [https://rocm.docs.amd.com/projects/rocprofiler-compute/en/latest/how-to/use.html](https://rocm.docs.amd.com/projects/rocprofiler-compute/en/latest/how-to/use.html) 
