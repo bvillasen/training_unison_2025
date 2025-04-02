@@ -81,7 +81,7 @@ Load necessary modules
 
 ```bash
 module load rocm
-module use --prepend /lustre/home/fnsc04/modules
+module use --prepend ~/curso/modules
 module load openmpi/5.0.7-ucc1.3.0-ucx1.18.0
 ```
 
