@@ -40,7 +40,7 @@ Add `rocprof-compute` to your path
 
 ```bash 
 source /lustre/cursos/curso02/miniconda3/etc/profile.d/conda.sh
-export /lustre/cursos/curso02/rocprof-compute/bin:$PATH
+export PATH=/lustre/cursos/curso02/rocprof-compute/bin:$PATH
 conda activate rocprof-compute
 ```
 
