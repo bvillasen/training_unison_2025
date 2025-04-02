@@ -3,6 +3,7 @@
 #include <hip/hip_runtime.h>
 
 template<int n_iter>
+__launch_bounds__(256)
 __global__ void flops_add(double *input, const int n) {
     const uint32_t gid = blockDim.x * blockIdx.x + threadIdx.x;
     const uint32_t n_threads  = gridDim.x * blockDim.x;

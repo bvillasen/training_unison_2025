@@ -28,6 +28,14 @@ Compile the program and determine the number of iterations.
 make N_ITER=16
 ```
 
+Run the benchmark 
+```bash
+./gpu_flops 1000
+```
+
+## Using `rocprof-compute` to profile our kernel
+
+
 Add `rocprof-compute` to your path
 
 ```bash 
@@ -42,9 +50,30 @@ Run rocprof-compute in profiling mode
 ROCPROF=rocprofv2 rocprof-compute profile -n flops -- ./gpu_flops 100
 ```
 
-Run rocprof-compute in analysis mode
+Get the roofline measurement
 
+```bash
+ROCPROF=rocprofv2 rocprof-compute profile -n flops --roof-only -- ./gpu_flops 100
+```
+
+The output of `rocprof-compute` will be in the `workloads/jacobi/MI210` directory.
+There you can see the `empirRoof_gpu-0_FP32.pdf` file which shows the roofline and the performance of your kernel
+
+
+You should see something like this:
+
+![roofline](./workloads/flops/MI210/roofline.png)
+
+## Using `rocprof-compute` to analyze our kernel
+
+
+Run rocprof-compute in analysis mode
 
 ```bash
 rocprof-compute analyze -p workloads/flops/MI210
 ```
+
+
+## Documentation
+
+More documentation can be found here [https://rocm.docs.amd.com/projects/rocprofiler-compute/en/latest/how-to/use.html](https://rocm.docs.amd.com/projects/rocprofiler-compute/en/latest/how-to/use.html) 
