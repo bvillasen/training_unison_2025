@@ -17,7 +17,7 @@ __global__ void flops_add(double *input, const int n) {
     double x = 2.0;
 
     // For every vector element, its doing one read
-    // For every vector element, its doing 2 * iter flops
+    // For every vector element, its doing 2 * n_iter FLOPs
     // For every thread, its doing one write
     
     for (uint64_t offset = 0; offset < max_offset; offset += n_threads) {
