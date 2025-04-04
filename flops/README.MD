@@ -33,16 +33,36 @@ Run the benchmark
 ./gpu_flops 1000
 ```
 
-## Using `rocprof-compute` to profile our kernel
 
+# Using `rocprof-compute`
 
-Add `rocprof-compute` to your path
+## Install `rocprof-compute`
 
-```bash 
-source /lustre/cursos/curso02/miniconda3/etc/profile.d/conda.sh
-export PATH=/lustre/cursos/curso02/rocprof-compute/bin:$PATH
+First we need to install `rocprof-compute`. We will do this in a 
+dedicated conda environment
+
+```bash
+module load conda
+conda deactivate
+conda create -n rocprof-compute python=3.10
 conda activate rocprof-compute
 ```
+
+Now we run the script that download and installs `rocprof-compute`
+
+```bash
+cd tools
+bash install_rocprof-compute.sh
+```
+
+Now we add the binaries to our path
+
+```bash
+export PATH=${HOME}/training_unison_2025/tools/rocprof-compute/bin:$PATH
+```
+
+## Using `rocprof-compute` to profile our kernel
+
 
 Run rocprof-compute in profiling mode
 

@@ -95,8 +95,43 @@ Check that the Tensorflow installation was successful
 python -c 'import tensorflow' 2> /dev/null && echo ‘Success’ || echo ‘Failure’
 ```
 
+## Run Pytorch examples
 
-## Exercises suite
+Go to the directory where there are some Pytorch examples
+
+```bash
+cd tensorflow_examples
+```
+
+Run a very simple example
+
+```bash
+python tensorflow_simple.py
+```
+
+## rocprof-compute
+
+
+First we need to install `rocprof-compute`. We will do this in a 
+dedicated conda environment
+
+```bash
+module load conda
+conda deactivate
+conda create -n rocprof-compute python=3.10
+conda activate rocprof-compute
+```
+
+Now we run the script that download and installs `rocprof-compute`
+
+```bash
+cd tools
+bash install_rocprof-compute.sh
+```
+
+
+
+# Exercises suite
 
 We have a full suite of exercises you can work on here: [https://github.com/amd/HPCTrainingExamples/tree/main](https://github.com/amd/HPCTrainingExamples/tree/main)
 

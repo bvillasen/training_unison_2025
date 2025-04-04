@@ -81,8 +81,8 @@ Load necessary modules
 
 ```bash
 module load rocm
-module use --prepend ~/curso/modules
-module load openmpi/5.0.7-ucc1.3.0-ucx1.18.0
+module use --prepend ${HOME}/curso/modules
+module load openmpi/5.0-ucc1.3-ucx1.16
 ```
 
 Compile the program
@@ -96,6 +96,8 @@ Run the Jacobi exercise
 ```bash
 mpirun -np 1 ./Jacobi_hip -g 1 1 -m 8192 8192
 ```
+
+## Kernel Statistics 
 
 Get kernel performance statistics
 
@@ -159,9 +161,9 @@ mpirun -np 1 omnitrace-run -- ./Jacobi_hip.inst -g 1 1 -m 8192 8192
 The results are saved to the `omnitrace-Jacobi_hip.inst-output` directory.
 Copy the results to your computer
 
-bash
-```
-scp -r fnsc03@148.225.111.153:/lustre/home/fnsc03/training_unison_2025/jacobi/omnitrace-Jacobi_hip.inst-output .
+
+```bash
+scp -r curso_49@148.225.111.153:~/training_unison_2025/jacobi/omnitrace-Jacobi_hip.inst-output .
 ```
 
 Go to [https://ui.perfetto.dev](https://ui.perfetto.dev) and load the file with `.proto` extension
@@ -187,12 +189,12 @@ To submit your job you need to write a SLURM script. Here an example  of the con
 
 echo "Starting job. $(date)"
 
-module use --prepend /lustre/home/fnsc04/modules
 module load rocm
-module load openmpi/5.0.7-ucc1.3.0-ucx1.18.0
+module use --prepend ${HOME}/curso/modules
+module load openmpi/5.0-ucc1.3-ucx1.16
 module load omnitrace
 
-export OMNITRACE_CONFIG_FILE=~/omnitrace.cfg
+export OMNITRACE_CONFIG_FILE=~/.omnitrace.cfg
 
 mpirun -np 2 omnitrace-run -- ./Jacobi_hip.inst  -g 2 1 -m 8192 8192
 
